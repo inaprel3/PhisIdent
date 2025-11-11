@@ -11,7 +11,6 @@ import joblib
 from datasets import load_dataset
 import os
 
-# Завантаження датасетів
 print("🔷 Завантаження основного датасету повідомлень (SMS + Email)...")
 dataset = load_dataset("ealvaradob/phishing-dataset", "texts", trust_remote_code=True)
 df_main = dataset['train'].to_pandas()
@@ -20,12 +19,10 @@ print("🔷 Завантаження кастомного датасету з cs
 custom_csv_path = os.path.join('csv', 'custom_messages.csv')
 df_custom = pd.read_csv(custom_csv_path)
 
-# Об’єднання датасетів
 df = pd.concat([df_main, df_custom], ignore_index=True)
 df['label'] = df['label'].astype(int)
 print(f"Загальна кількість записів після об’єднання: {len(df)}")
 
-# Присвоєння категорій
 def assign_category(text, label):
     text = str(text).lower()
 
@@ -52,7 +49,6 @@ df['category'] = df.apply(lambda row: assign_category(row['text'], row['label'])
 print("\n📊 Розподіл категорій повідомлень:")
 print(df['category'].value_counts())
 
-# Anti-trigger rule: якщо немає ключових слів, зменшити фішингову категорію
 ANTI_TRIGGER_WORDS = ["click", "link", "посилання", "натисніть", "confirm", "blocked", "payment", "invoice", "card", "credit"]
 
 def apply_anti_trigger(row):
@@ -65,7 +61,6 @@ def apply_anti_trigger(row):
 
 df['category'] = df.apply(apply_anti_trigger, axis=1)
 
-# Підготовка даних
 X = df['text']
 y = df['category']
 
@@ -73,22 +68,18 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
 
-# Побудова пайплайну
 pipeline = Pipeline([
     ('tfidf', TfidfVectorizer(analyzer='char_wb', ngram_range=(3,5), max_features=7000)),
     ('clf', OneVsRestClassifier(LogisticRegression(max_iter=1500)))
 ])
 
-# Навчання
 print("\n🚀 Навчання моделі...")
 pipeline.fit(X_train, y_train)
 
-# Оцінка
 print("\n📈 Classification report:")
 y_pred = pipeline.predict(X_test)
 print(classification_report(y_test, y_pred, zero_division=0))
 
-# Збереження
 os.makedirs('pkl', exist_ok=True)
 joblib.dump(pipeline, 'pkl/recommendation_model.pkl')
 print("\n✅ Модель рекомендацій збережено як 'pkl/recommendation_model.pkl'")

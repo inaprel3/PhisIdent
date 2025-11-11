@@ -13,12 +13,11 @@ import kagglehub
 
 print("🔷 Починаємо завантаження і тренування Kaggle датасетів")
 
-# 1) Download Phishing Email Dataset
+# Phishing Email Dataset
 print("1) Завантаження Kaggle Phishing Email Dataset...")
 email_path = kagglehub.dataset_download("naserabdullahalam/phishing-email-dataset")
 print("Файли завантажено у:", email_path)
 
-# Використовуємо phishing_email.csv
 email_csv = os.path.join(email_path, "phishing_email.csv")
 if not os.path.exists(email_csv):
     raise FileNotFoundError(f"Не знайдено файл phishing_email.csv у {email_path}")
@@ -27,13 +26,11 @@ df_email = pd.read_csv(email_csv)
 df_email = df_email.rename(columns={'text_combined': 'text'})[['text', 'label']]
 print("✅ Завантажено email дані, записів:", len(df_email))
 
-
-# 2) Download Phishing URL Dataset
+# Phishing URL Dataset
 print("\n2) Завантаження Kaggle Phishing URL Dataset...")
 url_path = kagglehub.dataset_download("adityachaudhary1306/phishing-url-classifier-dataset-cleaned")
 print("Файли завантажено у:", url_path)
 
-# Використовуємо dataset.csv
 url_csv = os.path.join(url_path, "dataset.csv")
 if not os.path.exists(url_csv):
     raise FileNotFoundError(f"Не знайдено файл dataset.csv у {url_path}")
@@ -41,16 +38,13 @@ if not os.path.exists(url_csv):
 df_url = pd.read_csv(url_csv)
 print("✅ Завантажено URL дані, записів:", len(df_url))
 
-# Заміна -1 → 0 у колонці Result
 df_url['Result'] = df_url['Result'].replace({-1: 0}).astype(int)
 X_url = df_url.drop(columns=['Result'])
 y_url = df_url['Result']
 
-
-# 3) Training recommendation model на email
+# Training recommendation model на email
 print("\n3) Тренування recommendation model на email...")
 
-# Беремо тільки фішингові листи
 df_phish = df_email[df_email['label'] == 1].copy()
 
 def assign_category(text):
@@ -84,8 +78,7 @@ os.makedirs('pkl', exist_ok=True)
 joblib.dump(pipeline, 'pkl/recommendation_model_kaggle.pkl')
 print("✅ recommendation_model_kaggle.pkl збережено")
 
-
-# 4) Training URL models
+# Training URL models
 print("\n4) Тренування URL моделей...")
 
 X_train, X_test, y_train, y_test = train_test_split(X_url, y_url, test_size=0.2, random_state=42, stratify=y_url)

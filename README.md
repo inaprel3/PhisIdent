@@ -1,58 +1,61 @@
-# Кваліфікаційна робота магістра 2025 року
-## "Інтелектуальна система ідентифікації фішингу"
+# Master’s Qualification Work 2025
+## "Intelligent Phishing Identification System"
 
 ---
 
-## Опис проекту
-Для економії місця, папка з файлами `pkl` була заархівована у zip.  
-Для запуску системи слід розархівувати цю папку, відкрити термінал у VS Code і виконати команду:
+## Project Description
+To save space, the folder containing pkl files has been archived in a ZIP file.
+To run the system, extract the folder, open a terminal in VS Code, and execute:
 
 ```bash
 python app.py
 ```
 
-Після цього у браузері відкриється сайт з системою за посиланням: http://127.0.0.1:5000/
+After that, the system’s web interface will open in a browser at: http://127.0.0.1:5000/
 
-Актуальність теми полягає у тому, що фішингові атаки є одними з найпоширеніших видів кіберзлочинів, спрямованих на отримання конфіденційної інформації користувачів шляхом соціальної інженерії та підробки вебресурсів. Щороку кількість таких атак зростає, завдаючи значної шкоди як окремим користувачам, так і великим організаціям. У зв’язку з цим, розробка інтелектуальних систем для автоматичного виявлення фішингових повідомлень та посилань є важливим напрямом підвищення рівня кібербезпеки та запобігання кіберзагрозам.
+The relevance of this topic lies in the fact that phishing attacks are among the most common types of cybercrime, aimed at obtaining confidential user information through social engineering and forged web resources. Each year, the number of such attacks increases, causing significant damage to both individual users and large organizations. Therefore, the development of intelligent systems for automatic detection of phishing messages and URLs is an important direction for improving cybersecurity and preventing cyber threats.
 
-Розробка інтелектуальної системи ідентифікації фішингових повідомлень та посилань здійснюється з метою підвищення рівня кібербезпеки, своєчасного попередження користувачів про потенційні загрози та зниження ризику несанкціонованого доступу до конфіденційної інформації. Для досягнення поставленої мети використано методи машинного навчання, обробки текстових даних та аналізу URL-адрес.
+The intelligent phishing identification system is designed to enhance cybersecurity, timely warn users of potential threats, and reduce the risk of unauthorized access to confidential information. To achieve this, machine learning methods, text data processing, and URL analysis are employed.
 
-Об’єктом дослідження є процеси автоматичного виявлення та класифікації фішингових повідомлень у цифрових комунікаційних системах, а також підробних URL-адрес, що використовуються у фішингових атаках. 
+The object of research is the processes of automatic detection and classification of phishing messages in digital communication systems, as well as fraudulent URLs used in phishing attacks.
 
-Предметом дослідження є алгоритми машинного навчання (Gradient Boosting, Random Forest, Logistic Regression, Support Vector Machine, Naive Bayes) для ідентифікації фішингових повідомлень і посилань на основі аналізу текстових і URL-ознакових характеристик. 
+The subject of research is machine learning algorithms (Gradient Boosting, Random Forest, Logistic Regression, Support Vector Machine, Naive Bayes) for identifying phishing messages and URLs based on analysis of textual and URL features.
 
-Архітектура розробленої інтелектуальної системи ідентифікації фішингових повідомлень і URL побудована на основі модульного підходу, що забезпечує її гнучкість, масштабованість та зручність у подальшій інтеграції з іншими аналітичними сервісами. Система включає інтерфейс користувача, реалізований засобами HTML, CSS та JavaScript; серверну частину на Flask (Python), яка обробляє запити користувача та виконує класифікацію повідомлень і URL-адрес; модулі попередньої обробки тексту та URL (очищення, визначення мови, переклад, TF-IDF-векторизація); блоки ML, що використовують алгоритми NB, LR, SVM, RF і GB; модуль рекомендацій і зворотного зв’язку, а також сховище даних для моделей і результатів. 
+The architecture of the developed intelligent phishing identification system is modular, ensuring flexibility, scalability, and ease of integration with other analytical services. The system includes a user interface implemented with HTML, CSS, and JavaScript; a backend on Flask (Python), which handles user requests and performs message and URL classification; modules for text and URL preprocessing (cleaning, language detection, translation, TF-IDF vectorization); ML blocks using NB, LR, SVM, RF, and GB algorithms; a recommendation and feedback module; and a data storage system for models and results.
 
 ![Схема структури системи](https://github.com/inaprel3/PhisIdent/raw/main/picture/SchemeStructure.png)
 
-## Як працює програма
+## How the Program Works
 
-Інтелектуальна система ідентифікації фішингу реалізована на мові Python із використанням фреймворку Flask, що забезпечує обробку HTTP-запитів, інтеграцію з моделями ML та взаємодію з фронтендом. Основний файл `app.py` керує запуском серверу, маршрутизацією запитів (`/check_message`, `/check_url`, `/feedback`), завантажує натреновані моделі для класифікації текстових повідомлень (LR, Multinomial NB, SVM) та URL-посилань (RF, GB), обробляє введений користувачем текст або URL (перевірка на наявність лише URL, визначення мови, переклад на англійську для коректної роботи моделей, векторизація), формує результати класифікації та рекомендації, обробляє фідбек користувача, а також автоматично відкриває вебінтерфейс у браузері. Додаткові модулі (`messages.py`, `url.py`, `train_kaggle_datasets.py`, `train_recommendation_model.py`) відповідають за підготовку даних, навчання та оцінку моделей, інтегруючи відкриті та кастомні датасети для підвищення точності класифікації, а також формування рекомендацій щодо потенційних фішингових повідомлень та URL. Фронтенд на HTML, CSS та JavaScript забезпечує зручний інтерфейс для введення даних, відображення результатів класифікації, рекомендацій і збору зворотного зв’язку. Всі дані, проміжні результати та навчальні моделі зберігаються у CSV та PKL-файлах, що дозволяє автономну роботу системи офлайн та забезпечує відтворюваність результатів.
+The intelligent phishing identification system is implemented in Python using the Flask framework, which handles HTTP requests, integrates ML models, and interacts with the frontend. The main file, app.py, manages server launch, request routing (/check_message, /check_url, /feedback), loads trained models for classifying text messages (LR, Multinomial NB, SVM) and URLs (RF, GB), processes user input (URL validation, language detection, translation to English for model compatibility, vectorization), generates classification results and recommendations, handles user feedback, and automatically opens the web interface in a browser. Additional modules (messages.py, url.py, train_kaggle_datasets.py, train_recommendation_model.py) handle data preparation, model training, and evaluation, integrating open and custom datasets to improve classification accuracy and generate recommendations for potential phishing messages and URLs. The frontend in HTML, CSS, and JavaScript provides an intuitive interface for data entry, displaying classification results, recommendations, and collecting feedback. All data, intermediate results, and trained models are stored in CSV and PKL files, allowing offline operation and reproducibility.
 
-Для тестування та оцінки ефективності системи використовувались кілька відкритих і кастомних наборів даних, що включають приклади фішингових і легітимних повідомлень та URL-адрес. Основним джерелом є «Phishing Dataset» із Hugging Face (https://huggingface.co/datasets/ealvaradob/phishing-dataset), який містить піднабори Mail (≈18 000 email), SMS (≈5 971 повідомлення), URL (≈800 000 адрес) та Website (≈80 000 вебсторінок), усі дані попередньо очищені, збалансовані та структуровані у два стовпці: «text» і «label»; для навчання моделей рекомендується скорочена версія «combined reduced». Для локалізації та підвищення точності системи були створені власні файли «custom_messages.csv» і «custom_urls.csv», що включають англомовні та україномовні повідомлення, а також легітимні та фішингові URL із реальних прикладів атак і популярних сервісів. Додатково використовувалися набори з Kaggle: «Phishing Email Dataset» (https://www.kaggle.com/datasets/naserabdullahalam/phishing-email-dataset?select=phishing_email.csv), що містить понад 82 000 email із різних джерел для навчання текстових моделей, та «Phishing URL Classifier Dataset Cleaned» (https://www.kaggle.com/datasets/adityachaudhary1306/phishing-url-classifier-dataset-cleaned) із близько 11 000 URL для класифікації на основі структурних ознак. Комбінація цих джерел забезпечує репрезентативність, баланс класів, різноманітність форматів і мов, що підвищує точність, узагальнюваність і надійність системи.
+For testing and evaluating system performance, several open and custom datasets were used, containing phishing and legitimate messages and URLs. The main source is the “Phishing Dataset” from Hugging Face (https://huggingface.co/datasets/ealvaradob/phishing-dataset
+), containing Mail (≈18,000 emails), SMS (≈5,971 messages), URL (≈800,000 addresses), and Website (≈80,000 pages) subsets, all pre-cleaned, balanced, and structured in two columns: “text” and “label”. A reduced “combined reduced” version is recommended for model training. To localize and improve system accuracy, custom files custom_messages.csv and custom_urls.csv were created, including English and Ukrainian messages, as well as legitimate and phishing URLs from real attack examples and popular services. Additionally, Kaggle datasets were used: “Phishing Email Dataset” (https://www.kaggle.com/datasets/naserabdullahalam/phishing-email-dataset?select=phishing_email.csv
+) with over 82,000 emails for text model training, and “Phishing URL Classifier Dataset Cleaned” (https://www.kaggle.com/datasets/adityachaudhary1306/phishing-url-classifier-dataset-cleaned
+) with ~11,000 URLs for structural feature-based classification. Combining these sources ensures representativeness, class balance, format and language diversity, improving accuracy, generalization, and reliability.
 
-Фронтенд системи виявлення фішингових повідомлень і посилань реалізований через вебінтерфейс із використанням HTML, CSS та JavaScript і забезпечує інтуїтивно зрозумілу взаємодію користувача з моделями ML у режимі реального часу. Головна сторінка містить дві форми для перевірки текстових повідомлень та URL-адрес із полем введення, кнопкою «Перевірити» та блоком результатів, де відображається висновок моделі у форматі JSON. Для швидкого сприйняття рівня загрози застосовується кольорова система індикаторів: зелений – безпечне, червоний – фішингове, жовтий – потребує додаткової перевірки. Під результатом надаються рекомендації щодо подальших дій, а користувач може залишити фідбек для покращення рекомендаційного компонента. Додатково передбачені спливаючі підказки та повідомлення про помилки введення для підвищення юзабіліті. Типовий сценарій роботи: користувач вводить текст або URL → натискає «Перевірити» → бекенд класифікує об’єкт → результат із рівнем ризику та порадами відображається на фронтенді, що робить процес перевірки простим, наочним і зручним навіть для некваліфікованих користувачів.
+The frontend of the phishing detection system is a web interface using HTML, CSS, and JavaScript, enabling intuitive user interaction with ML models in real time. The main page includes two forms for checking text messages and URLs, with an input field, a “Check” button, and a result block showing the model output in JSON format. A color-coded indicator quickly conveys the threat level: green – safe, red – phishing, yellow – requires further verification. Recommendations for next steps are displayed below, and users can provide feedback to improve the recommendation component. Tooltips and input error messages enhance usability. A typical workflow: user inputs text or URL → clicks “Check” → backend classifies the object → results with risk level and recommendations are displayed, making the verification process clear, intuitive, and convenient even for non-experts.
 
-Головна сторінка системи у браузері:
+System home page in browser:
 ![](https://github.com/inaprel3/PhisIdent/blob/main/picture/System%20home%20page%20in%20browser.png)
 
-Безпечні повідомлення та посилання:
+Safe messages and links:
 ![](https://github.com/inaprel3/PhisIdent/blob/main/picture/Secure%20messages%20and%20links.png)
 
-Небезпечні повідомлення та посилання:
+Dangerous messages and links:
 ![](https://github.com/inaprel3/PhisIdent/blob/main/picture/Dangerous%20messages%20and%20links.png)
 
-Пусті поля для введення повідомлень і посилань:
+Empty input fields for messages and links:
 ![](https://github.com/inaprel3/PhisIdent/blob/main/picture/Empty%20fields%20for%20entering%20messages%20and%20links.png)
 
-### Результати роботи моделей ML
+### ML Model Results
 
-#### Класифікація повідомлень (SMS + Email + Custom)
+#### Message Classification (SMS + Email + Custom)
 
-| Модель                  | Клас            | Precision | Recall | F1-score | Support |
+| Model                    | Class          | Precision | Recall | F1-score | Support |
 |--------------------------|----------------|-----------|--------|----------|---------|
-| **Naive Bayes (NB)**     | 0 (безпечні)   | 0.96      | 0.96   | 0.96     | 2496    |
-|                          | 1 (фішинг)     | 0.93      | 0.94   | 0.93     | 1539    |
+| **Naive Bayes (NB)**     | 0 (safe)       | 0.96      | 0.96   | 0.96     | 2496    |
+|                          | 1 (phishing)   | 0.93      | 0.94   | 0.93     | 1539    |
 |                          | **accuracy**   |           |        | 0.95     | 4035    |
 | **Logistic Regression**  | 0              | 0.96      | 0.97   | 0.96     | 2496    |
 |                          | 1              | 0.96      | 0.93   | 0.94     | 1539    |
@@ -61,22 +64,22 @@ python app.py
 |                          | 1              | 0.96      | 0.94   | 0.95     | 1539    |
 |                          | **accuracy**   |           |        | 0.96     | 4035    |
 
-#### Класифікація URL (Main + Custom)
+#### URL Classification (Main + Custom)
 
-| Модель                  | Клас            | Precision | Recall | F1-score | Support |
+| Model                    | Class          | Precision | Recall | F1-score | Support |
 |--------------------------|----------------|-----------|--------|----------|---------|
-| **Random Forest (RF)**   | 0 (безпечні)   | 0.97      | 0.98   | 0.97     | 89053   |
-|                          | 1 (фішинг)     | 0.97      | 0.96   | 0.97     | 78093   |
+| **Random Forest (RF)**   | 0 (safe)       | 0.97      | 0.98   | 0.97     | 89053   |
+|                          | 1 (phishing)   | 0.97      | 0.96   | 0.97     | 78093   |
 |                          | **accuracy**   |           |        | 0.97     | 167146  |
 | **Gradient Boosting (GB)** | 0            | 0.90      | 0.93   | 0.92     | 89053   |
 |                          | 1              | 0.92      | 0.88   | 0.90     | 78093   |
 |                          | **accuracy**   |           |        | 0.91     | 167146  |
 
-#### Класифікація Kaggle datasets
+#### Kaggle Dataset Classification
 
 **Phishing Email Dataset (recommendation model):**
 
-| Категорія                  | Precision | Recall | F1-score | Support |
+| Category                    | Precision | Recall | F1-score | Support |
 |-----------------------------|-----------|--------|----------|---------|
 | account_blocked             | 1.00      | 0.67   | 0.80     | 55      |
 | default                     | 0.93      | 0.98   | 0.95     | 5069    |
@@ -87,7 +90,7 @@ python app.py
 
 **Phishing URL Dataset (Kaggle):**
 
-| Модель                  | Клас            | Precision | Recall | F1-score | Support |
+| Model                    | Class          | Precision | Recall | F1-score | Support |
 |--------------------------|----------------|-----------|--------|----------|---------|
 | Random Forest (RF)       | 0              | 0.98      | 0.96   | 0.97     | 980     |
 |                          | 1              | 0.97      | 0.98   | 0.98     | 1231    |
@@ -98,7 +101,7 @@ python app.py
 
 #### Recommendation model (Custom + SMS + Email)
 
-| Категорія                  | Precision | Recall | F1-score | Support |
+| Category                    | Precision | Recall | F1-score | Support |
 |-----------------------------|-----------|--------|----------|---------|
 | account_blocked             | 0.00      | 0.00   | 0.00     | 4       |
 | default                     | 0.84      | 0.83   | 0.83     | 879     |
@@ -107,3 +110,7 @@ python app.py
 | request_personal_data       | 0.83      | 0.57   | 0.68     | 217     |
 | safe                        | 0.93      | 0.99   | 0.96     | 2496    |
 | **accuracy**                |           |        | 0.91     | 4035    |
+
+The PhisIdent system also collects user feedback, storing information about the object type, content, classification result, and user comment, which allows confirming or correcting the model’s decisions and further improving classification accuracy.
+
+У результаті виконаної роботи було створено та протестовано інтелектуальну систему PhisIdent для виявлення фішингових повідомлень і URL-адрес, яка поєднує методи машинного навчання, обробки природної мови та аналізу вебресурсів. Розробка включала модульну архітектуру з бекендом на Python, фронтендом на HTML, CSS та JS і сховищем моделей у форматах PKL та CSV, що забезпечує гнучкість, масштабованість і простоту інтеграції в реальні середовища. Проведене тестування показало високу ефективність системи, точність класифікації більшості моделей перевищує 90–97%, що підтверджує адекватність вибору алгоритмів NB, LR, SVM, RF та GB та репрезентативність використаних наборів даних. Особливу роль у підвищенні точності та адаптивності системи відіграє механізм збору користувацького фідбеку, який дозволяє уточнювати результати класифікації та поступово вдосконалювати моделі. Отже, PhisIdent є практичним інструментом для підвищення кібербезпеки організацій, навчальних закладів і приватних користувачів, а подальший розвиток може включати інтеграцію з базами фішингових доменів, аналіз зображень та автоматичне оновлення моделей, що забезпечить ще більшу ефективність у виявленні сучасних загроз.

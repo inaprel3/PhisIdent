@@ -25,18 +25,15 @@ df_custom = pd.read_csv(custom_csv_path)
 print("Перші 5 рядків кастомного датасету:")
 print(df_custom.head())
 
-# Об'єднуємо датасети
 df = pd.concat([df_main, df_custom], ignore_index=True)
 print(f"\nЗагальна кількість записів після об’єднання: {len(df)}")
 
-# Переконаємося, що label — int
 df['label'] = df['label'].astype(int)
 
 X_train, X_test, y_train, y_test = train_test_split(
     df['text'], df['label'], test_size=0.2, random_state=42, stratify=df['label']
 )
 
-# Розділяємо на тренувальну та тестову вибірки
 X_train, X_test, y_train, y_test = train_test_split(
     df['text'], df['label'], test_size=0.2, random_state=42, stratify=df['label']
 )
@@ -71,7 +68,6 @@ y_pred_svm = svm_pipeline.predict(X_test)
 print("\n--- Support Vector Machine ---")
 print(classification_report(y_test, y_pred_svm))
 
-# Зберігаємо моделі
 joblib.dump(nb_pipeline, 'pkl/message_nb_model.pkl')
 print("✅ Naive Bayes модель збережено як 'message_nb_model.pkl'")
 joblib.dump(lr_pipeline, 'pkl/message_lr_model.pkl')

@@ -1,0 +1,4 @@
+timestamp,message,system_result,system_category,user_feedback,user_comment
+2025-10-18 13:22:40,Терміново перейдіть за посиланням,Фішингове повідомлення,request_click_link,correct,
+2025-10-18 13:22:47,Терміново перейдіть за посиланням,Фішингове повідомлення,request_click_link,incorrect,
+2025-10-18 13:22:58,Терміново перейдіть за посиланням,Фішингове повідомлення,request_click_link,correct,шо таке

@@ -1,0 +1,189 @@
+<!-- templates/index.html --> 
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8" />
+    <title>Phishing Identification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="header-flex">
+        <img src="{{ url_for('static', filename='pictures/mess.gif') }}" alt="Повідомлення" class="gif-mess">
+        <h1>Phishing Identification</h1>
+        <img src="{{ url_for('static', filename='pictures/mess.gif') }}" alt="Посилання" class="gif-mess">
+    </div>
+    
+    <div class="cards">
+        <!-- Повідомлення -->
+        <div class="card" id="messageCard">
+            <h2>Перевірка повідомлення 📨</h2>
+            <textarea id="message" maxlength="1000" placeholder="Введіть текст повідомлення" oninput="autoResize(this)"></textarea>
+            <button onclick="checkMessage()">Перевірити повідомлення</button>
+            <p id="messageResult"></p>
+
+            <div class="recommendation">
+                <h3>Рекомендації</h3>
+                <p id="messageRecommendation"></p>
+            </div>
+
+            <textarea id="messageFeedback" placeholder="Ваш відгук про рекомендацію"></textarea>
+            <button onclick="sendFeedback('message')">Надіслати відгук</button>
+            <p id="messageFeedbackStatus"></p>
+        </div>
+
+        <!-- Посилання -->
+        <div class="card" id="urlCard">
+            <h2>Перевірка посилання 🔗</h2>
+            <input type="text" id="url" placeholder="Введіть URL-посилання">
+            <button onclick="checkURL()">Перевірити посилання</button>
+            <p id="urlResult"></p>
+
+            <div class="recommendation">
+                <h3>Рекомендації</h3>
+                <p id="urlRecommendation"></p>
+            </div>
+
+            <textarea id="urlFeedback" placeholder="Ваш відгук про рекомендацію"></textarea>
+            <button onclick="sendFeedback('url')">Надіслати відгук</button>
+            <p id="urlFeedbackStatus"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+const recommendations = {
+    "request_click_link": "⚠️ Не переходьте за посиланням! Це може бути шахрайство.",
+    "account_blocked": "⚠️ Ваш акаунт можуть використовувати шахраї. Не повідомляйте свої дані та перевірте на офіційному сайті.",
+    "payment_alert": "⚠️ Не здійснюйте оплату, доки не переконаєтесь у достовірності повідомлення.",
+    "default": "⚠️ Небезпечно довіряти цьому повідомленню!"
+};
+
+async function checkMessage() {
+    const message = document.getElementById("message").value.trim();
+    const card = document.getElementById("messageCard");
+    const resultEl = document.getElementById("messageResult");
+    const recEl = document.getElementById("messageRecommendation");
+
+    card.classList.remove("safe", "phishing", "warning");
+    resultEl.classList.remove("warning");
+    recEl.innerText = "";
+
+    if (message === "") {
+        resultEl.innerText = "⚠️ Введіть текст повідомлення для перевірки";
+        resultEl.classList.add("warning");
+        card.classList.add("warning");
+        return;
+    }
+
+    const res = await fetch("/check_message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+    });
+    const data = await res.json();
+    resultEl.innerText = data.result;
+
+    if (data.result.toLowerCase().includes("безпеч")) {
+        card.classList.add("safe");
+        recEl.innerText = "✅ Можна довіряти повідомленню.";
+    } else if (data.result.toLowerCase().includes("фішинг")) {
+        card.classList.add("phishing");
+        recEl.innerText = recommendations[data.category] || recommendations["default"];
+    } else {
+        card.classList.add("warning");
+        resultEl.classList.add("warning");
+    }
+}
+
+async function checkURL() {
+    const url = document.getElementById("url").value.trim();
+    const card = document.getElementById("urlCard");
+    const resultEl = document.getElementById("urlResult");
+    const recEl = document.getElementById("urlRecommendation");
+
+    card.classList.remove("safe", "phishing", "warning");
+    resultEl.classList.remove("warning");
+    recEl.innerText = "";
+
+    if (url === "") {
+        resultEl.innerText = "⚠️ Введіть URL-посилання для перевірки";
+        resultEl.classList.add("warning");
+        card.classList.add("warning");
+        return;
+    }
+
+    const res = await fetch("/check_url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url })
+    });
+    const data = await res.json();
+    resultEl.innerText = data.result;
+
+    if (data.result.toLowerCase().includes("безпеч")) {
+        card.classList.add("safe");
+        recEl.innerText = "✅ Можна переходити за посиланням.";
+    } else if (data.result.toLowerCase().includes("фішинг")) {
+        card.classList.add("phishing");
+        recEl.innerText = "⚠️ Небезпечно переходити за цим посиланням!";
+    } else {
+        card.classList.add("warning");
+        resultEl.classList.add("warning");
+    }
+}
+
+async function sendFeedback(type) {
+    const content = type === 'message'
+        ? document.getElementById('message').value
+        : document.getElementById('url').value;
+    const feedbackText = type === 'message'
+        ? document.getElementById('messageFeedback').value
+        : document.getElementById('urlFeedback').value;
+    const resultText = type === 'message'
+        ? document.getElementById('messageResult').innerText
+        : document.getElementById('urlResult').innerText;
+    const statusEl = type === 'message'
+        ? document.getElementById('messageFeedbackStatus')
+        : document.getElementById('urlFeedbackStatus');
+
+    if (!feedbackText.trim()) {
+        statusEl.innerText = "⚠️ Напишіть свій відгук.";
+        return;
+    }
+
+    try {
+        const res = await fetch("/feedback", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                type,
+                content,
+                system_result: resultText,
+                user_opinion: feedbackText
+            })
+        });
+        const data = await res.json();
+        statusEl.innerText = data.message;
+
+        if (type === 'message') document.getElementById('messageFeedback').value = "";
+        else document.getElementById('urlFeedback').value = "";
+    } catch (err) {
+        console.error(err);
+        statusEl.innerText = "❌ Помилка надсилання відгуку";
+    }
+}
+
+function autoResize(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const textarea = document.getElementById('message');
+    if (textarea.value.length > 0) autoResize(textarea);
+});
+</script>
+</body>
+</html>

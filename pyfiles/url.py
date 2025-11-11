@@ -22,7 +22,6 @@ df_custom = pd.read_csv(custom_csv_path)
 print("Перші 5 рядків кастомного датасету:")
 print(df_custom.head())
 
-# Об'єднуємо датасети
 df = pd.concat([df_main, df_custom], ignore_index=True)
 print(f"\nЗагальна кількість записів після об’єднання: {len(df)}")
 

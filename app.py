@@ -11,7 +11,6 @@ import os
 
 app = Flask(__name__)
 
-# Завантаження моделей
 def safe_load(path, name):
     try:
         mdl = joblib.load(path)
@@ -31,7 +30,6 @@ url_gb_model_kaggle = safe_load('pkl/url_gb_model_kaggle.pkl', 'url_gb_model_kag
 
 translator = Translator()
 
-# Допоміжні функції
 def is_valid_url(url: str) -> bool:
     pattern = re.compile(r'^(https?://)([^\s]+\.)+[^\s]{2,}', re.IGNORECASE)
     return pattern.match(url) is not None
@@ -50,7 +48,6 @@ DEFAULT_RECOMMENDATIONS = {
     "default": "⚠️ Небезпечно довіряти цьому повідомленню!"
 }
 
-# Роути
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -138,7 +135,6 @@ def check_url():
     else:
         return jsonify({"result": "Посилання безпечне", "valid_url": True, "recommendation": "✅ Можна переходити за посиланням."})
 
-# Роут: фідбек
 @app.route("/feedback", methods=["POST"])
 def feedback():
     data = request.json or {}
@@ -156,7 +152,6 @@ def feedback():
 
     return jsonify({"message": "✅ Дякуємо за відгук! Його збережено."})
 
-# Авто відкриття браузера
 def open_browser():
     webbrowser.open_new("http://127.0.0.1:5000/")
 

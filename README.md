@@ -44,3 +44,66 @@ python app.py
 
 Пусті поля для введення повідомлень і посилань:
 ![](https://github.com/inaprel3/PhisIdent/blob/main/picture/Empty%20fields%20for%20entering%20messages%20and%20links.png)
+
+### Результати роботи моделей ML
+
+#### Класифікація повідомлень (SMS + Email + Custom)
+
+| Модель                  | Клас            | Precision | Recall | F1-score | Support |
+|--------------------------|----------------|-----------|--------|----------|---------|
+| **Naive Bayes (NB)**     | 0 (безпечні)   | 0.96      | 0.96   | 0.96     | 2496    |
+|                          | 1 (фішинг)     | 0.93      | 0.94   | 0.93     | 1539    |
+|                          | **accuracy**   |           |        | 0.95     | 4035    |
+| **Logistic Regression**  | 0              | 0.96      | 0.97   | 0.96     | 2496    |
+|                          | 1              | 0.96      | 0.93   | 0.94     | 1539    |
+|                          | **accuracy**   |           |        | 0.96     | 4035    |
+| **Support Vector Machine (SVM)** | 0        | 0.97      | 0.98   | 0.97     | 2496    |
+|                          | 1              | 0.96      | 0.94   | 0.95     | 1539    |
+|                          | **accuracy**   |           |        | 0.96     | 4035    |
+
+#### Класифікація URL (Main + Custom)
+
+| Модель                  | Клас            | Precision | Recall | F1-score | Support |
+|--------------------------|----------------|-----------|--------|----------|---------|
+| **Random Forest (RF)**   | 0 (безпечні)   | 0.97      | 0.98   | 0.97     | 89053   |
+|                          | 1 (фішинг)     | 0.97      | 0.96   | 0.97     | 78093   |
+|                          | **accuracy**   |           |        | 0.97     | 167146  |
+| **Gradient Boosting (GB)** | 0            | 0.90      | 0.93   | 0.92     | 89053   |
+|                          | 1              | 0.92      | 0.88   | 0.90     | 78093   |
+|                          | **accuracy**   |           |        | 0.91     | 167146  |
+
+#### Класифікація Kaggle datasets
+
+**Phishing Email Dataset (recommendation model):**
+
+| Категорія                  | Precision | Recall | F1-score | Support |
+|-----------------------------|-----------|--------|----------|---------|
+| account_blocked             | 1.00      | 0.67   | 0.80     | 55      |
+| default                     | 0.93      | 0.98   | 0.95     | 5069    |
+| payment_alert               | 0.93      | 0.38   | 0.54     | 113     |
+| request_click_link          | 0.98      | 0.92   | 0.95     | 2237    |
+| request_personal_data       | 0.82      | 0.79   | 0.80     | 1105    |
+| **accuracy**                |           |        | 0.93     | 8579    |
+
+**Phishing URL Dataset (Kaggle):**
+
+| Модель                  | Клас            | Precision | Recall | F1-score | Support |
+|--------------------------|----------------|-----------|--------|----------|---------|
+| Random Forest (RF)       | 0              | 0.98      | 0.96   | 0.97     | 980     |
+|                          | 1              | 0.97      | 0.98   | 0.98     | 1231    |
+|                          | **accuracy**   |           |        | 0.97     | 2211    |
+| Gradient Boosting (GB)   | 0              | 0.95      | 0.94   | 0.95     | 980     |
+|                          | 1              | 0.95      | 0.96   | 0.96     | 1231    |
+|                          | **accuracy**   |           |        | 0.95     | 2211    |
+
+#### Recommendation model (Custom + SMS + Email)
+
+| Категорія                  | Precision | Recall | F1-score | Support |
+|-----------------------------|-----------|--------|----------|---------|
+| account_blocked             | 0.00      | 0.00   | 0.00     | 4       |
+| default                     | 0.84      | 0.83   | 0.83     | 879     |
+| payment_alert               | 1.00      | 0.10   | 0.17     | 21      |
+| request_click_link          | 0.91      | 0.82   | 0.87     | 418     |
+| request_personal_data       | 0.83      | 0.57   | 0.68     | 217     |
+| safe                        | 0.93      | 0.99   | 0.96     | 2496    |
+| **accuracy**                |           |        | 0.91     | 4035    |

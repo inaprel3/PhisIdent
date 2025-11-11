@@ -1,5 +1,5 @@
-# Master’s Qualification Work 2025
-## "Intelligent Phishing Identification System"
+# "Intelligent Phishing Identification System"
+## Master’s Qualification Work 2025
 ### Tsymbal Anastasiia
 
 ---
